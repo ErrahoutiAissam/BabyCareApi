@@ -26,13 +26,13 @@ public class AuthService {
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .email(request.getEmail())
+                .username(request.getEmail())
                 .password(passwordEncoder.encoder().encode(request.getPassword()))
                 .build();
 
 
 
-        if(userRepo.findByEmail(request.getEmail()).isPresent()){
+        if(userRepo.findByUsername(request.getEmail()).isPresent()){
             throw new NotFoundException("this email already exists");
         }
         userRepo.save(user);
@@ -45,8 +45,10 @@ public class AuthService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException {
         UserDetails userDetails = userService.loadUserByUsername(request.getEmail());
+        System.out.println(userDetails.getPassword());
+        System.out.println(request.password);
 
-        if (passwordEncoder.encoder().matches(request.getPassword(), userDetails.getPassword())) {
+        if (passwordEncoder.encoder().matches(request.getPassword(),userDetails.getPassword())) {
             String token = jwtService.generateToken(userDetails);
             return AuthenticationResponse.builder()
                     .token(token)
