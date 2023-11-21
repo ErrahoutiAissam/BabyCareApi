@@ -7,31 +7,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Child {
+public class Reminder {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String firstName;
-    @Column(nullable = false)
-    private String lastName;
-    private int age;
-    private Date birthDate;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-    private double weight;
-    private double height;
+    private Date reminderDate;
 
-    @OneToMany
-    private List<Reminder> reminderList;
+    @Enumerated(EnumType.STRING)
+    private ReminderState reminderState;
+
+
 }

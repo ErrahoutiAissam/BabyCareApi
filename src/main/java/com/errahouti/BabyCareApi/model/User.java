@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -17,27 +18,34 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "parents")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
-
-
-    @Column(nullable = false)
-    protected String firstName;
+    private Long id;
 
     @Column(nullable = false)
-    protected String lastName;
+    private String firstName;
 
-    protected String phone;
+    @Column(nullable = false)
+    private String lastName;
+
+    private String phone;
 
     @Column(nullable = false, unique = true)
-    protected String username;
-
+    private String username;
+    @OneToMany
+    private List<Child> children;
     @Column(nullable = false)
-    protected String password;
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "parent_tips",
+            joinColumns = @JoinColumn(name = "parent_id"),
+            inverseJoinColumns = @JoinColumn(name = "tip_id"))
+    private Set<Tips> tipsList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
