@@ -1,12 +1,22 @@
 package com.errahouti.BabyCareApi.service;
 
 
+import com.errahouti.BabyCareApi.dto.activity.ActivityDTO;
+import com.errahouti.BabyCareApi.dto.activity.ActivityMapper;
 import com.errahouti.BabyCareApi.dto.child.ChildDTO;
 import com.errahouti.BabyCareApi.dto.child.ChildMapper;
+import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
+import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
+import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
+import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
+import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
+import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
+import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +26,10 @@ public class ChildService {
 
     private final ChildRepo childRepo;
     private final ChildMapper childMapper;
+    private final NutritionMapper nutritionMapper;
+    private final SleepMapper sleepMapper;
+    private final ActivityMapper activityMapper;
+    private final DiaperMapper diaperMapper;
 
 
     public ChildDTO getChildById(Long id) throws NotFoundException {
@@ -23,10 +37,49 @@ public class ChildService {
                 .orElseThrow(NotFoundException::new));
     }
 
+    public ChildDTO createChild(ChildDTO childDTO){
+        return childMapper.toChildDTO(childRepo
+                .save(childMapper.toChild(childDTO)));
+    }
+
     public List<ChildDTO> getAllChildren(){
         return childRepo.findAll().stream()
                 .map(childMapper::toChildDTO).toList();
     }
+
+    @Transactional
+    public void addNutritionReminder(NutritionDTO nutritionDTO, ChildDTO childDTO) throws NotFoundException {
+
+        Child child = childRepo.findById(childDTO.getId())
+                .orElseThrow(NotFoundException::new);
+        child.getNutritionReminders().add(nutritionMapper.createNutrition(nutritionDTO));
+        childRepo.save(child);
+    }
+    @Transactional
+    public void addSleepReminder(SleepDTO sleepDTO, ChildDTO childDTO) throws NotFoundException {
+
+        Child child = childRepo.findById(childDTO.getId())
+                .orElseThrow(NotFoundException::new);
+        child.getSleepReminders().add(sleepMapper.createSleep(sleepDTO));
+        childRepo.save(child);
+    }
+    @Transactional
+    public void addActivityReminder(ActivityDTO activityDTO, ChildDTO childDTO) throws NotFoundException {
+
+        Child child = childRepo.findById(childDTO.getId())
+                .orElseThrow(NotFoundException::new);
+        child.getActivityReminders().add(activityMapper.createActivity(activityDTO));
+        childRepo.save(child);
+    }
+    @Transactional
+    public void addDiaperReminder(DiaperDTO diaperDTO, ChildDTO childDTO) throws NotFoundException {
+
+        Child child = childRepo.findById(childDTO.getId())
+                .orElseThrow(NotFoundException::new);
+        child.getDiaperReminders().add(diaperMapper.createDiaper(diaperDTO));
+        childRepo.save(child);
+    }
+
 
 
 }
