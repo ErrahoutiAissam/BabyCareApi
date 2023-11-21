@@ -3,10 +3,8 @@ package com.errahouti.BabyCareApi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Diaper extends Reminder{

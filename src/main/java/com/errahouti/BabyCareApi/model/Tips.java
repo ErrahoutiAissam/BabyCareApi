@@ -20,7 +20,7 @@ public class Tips {
     private String category;
     private String target;
     private String description;
-    @ManyToMany(mappedBy = "tips")
+    @ManyToMany(mappedBy = "tipsList")
     private List<User> parentList;
 
 
