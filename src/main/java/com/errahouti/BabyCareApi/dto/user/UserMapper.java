@@ -1,12 +1,13 @@
 package com.errahouti.BabyCareApi.dto.user;
 
 
+import com.errahouti.BabyCareApi.dto.child.ChildMapper;
 import com.errahouti.BabyCareApi.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ChildMapper.class})
 public interface UserMapper {
 //    @Mappings({
 //            @Mapping(target = "tipsList", ignore = true), // Ignore tipsList for now

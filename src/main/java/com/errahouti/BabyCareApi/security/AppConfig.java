@@ -32,6 +32,7 @@ public class AppConfig {
 
 
     @Bean
+
     public AuthenticationProvider authenticationProvider(){
         final DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService);

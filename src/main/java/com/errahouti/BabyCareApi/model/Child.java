@@ -31,6 +31,9 @@ public class Child {
     private double weight;
     private double height;
 
+    @ManyToOne
+    private User parent;
+
     @OneToMany
     private List<Nutrition> nutritionReminders;
     @OneToMany

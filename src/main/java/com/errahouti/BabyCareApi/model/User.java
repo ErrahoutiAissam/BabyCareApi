@@ -35,10 +35,11 @@ public class User implements UserDetails {
 
     @Column(nullable = false, unique = true)
     private String username;
-    @OneToMany
+    @OneToMany(mappedBy = "parent")
     private List<Child> children;
     @Column(nullable = false)
     private String password;
+
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

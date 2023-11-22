@@ -1,5 +1,6 @@
 package com.errahouti.BabyCareApi.dto.user;
 
+import com.errahouti.BabyCareApi.dto.child.ChildDTO;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.Tips;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class UserDTO {
     private String username;
     private String phone;
     private String password;
-    private List<Child> children;
+    private List<ChildDTO> children;
     private Set<Tips> tipsList;
 
 

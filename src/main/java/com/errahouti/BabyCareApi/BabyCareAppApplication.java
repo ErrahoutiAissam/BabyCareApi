@@ -3,8 +3,6 @@ package com.errahouti.BabyCareApi;
 import com.errahouti.BabyCareApi.controller.auth.AuthService;
 import com.errahouti.BabyCareApi.dto.child.ChildMapper;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
-import com.errahouti.BabyCareApi.exception.NotFoundException;
-import com.errahouti.BabyCareApi.model.*;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.NutritionRepo;
 import com.errahouti.BabyCareApi.repository.ReminderRepo;
@@ -15,11 +13,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
 public class BabyCareAppApplication {
@@ -45,10 +38,11 @@ public class BabyCareAppApplication {
 		return args -> {
 //			Child child1 =  new Child();
 //
-//			child1.setFirstName("mohamed");
+//			child1.setFirstName("samir");
 //			child1.setLastName("allaoui");
-//			child1.setAge(2);
+//			child1.setAge(5);
 //			child1.setGender(Gender.MALE);
+//			childRepo.save(child1);
 //
 //			Child child2 =  new Child();
 //
@@ -85,8 +79,8 @@ public class BabyCareAppApplication {
 //
 //			childService.addNutritionReminder(nutritionMapper.toNutritionDTO(nutrition),
 //					childMapper.toChildDTO(child));
-
-		};
+//			System.out.println(childRepo.findByIdAndParentId(1L,1L));
+			};
 	}
 
 

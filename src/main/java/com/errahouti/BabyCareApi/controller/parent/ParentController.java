@@ -2,9 +2,7 @@ package com.errahouti.BabyCareApi.controller.parent;
 
 
 import com.errahouti.BabyCareApi.dto.user.UserDTO;
-import com.errahouti.BabyCareApi.exception.EmailAlreadyExistsException;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
-import com.errahouti.BabyCareApi.model.User;
 import com.errahouti.BabyCareApi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -58,6 +56,23 @@ public class ParentController {
         return ResponseEntity.ok("Child added Successfully");
 
     }
+
+    @SneakyThrows
+    @GetMapping("/{id}/children")
+    public ResponseEntity<?> getParentChildren(@PathVariable("id") Long id){
+
+       return ResponseEntity.ok(userService.getChildren(id));
+    }
+
+    @SneakyThrows
+    @GetMapping("/{id}/children/{childId}")
+    public ResponseEntity<?> getParentChild
+            (@PathVariable("id") Long id,
+            @PathVariable("childId") Long childId){
+        return ResponseEntity.ok(userService.getChild(id, childId));
+    }
+
+
 
 
 }

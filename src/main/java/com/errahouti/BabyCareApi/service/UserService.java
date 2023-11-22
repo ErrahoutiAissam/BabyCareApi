@@ -2,9 +2,11 @@ package com.errahouti.BabyCareApi.service;
 
 
 import com.errahouti.BabyCareApi.controller.auth.RegisterRequest;
+import com.errahouti.BabyCareApi.dto.child.ChildDTO;
 import com.errahouti.BabyCareApi.dto.child.ChildMapper;
 import com.errahouti.BabyCareApi.dto.user.UserDTO;
 import com.errahouti.BabyCareApi.dto.user.UserMapper;
+import com.errahouti.BabyCareApi.exception.AlreadyExistsException;
 import com.errahouti.BabyCareApi.exception.EmailAlreadyExistsException;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.NotActiveException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,6 +54,18 @@ public class UserService implements UserDetailsService {
                 .build();
 
         return userMapper.toUserDTO(userRepo.save(user)) ;
+
+    }
+
+    public List<ChildDTO> getChildren(Long id) throws NotFoundException {
+        return userRepo.findById(id).orElseThrow(NotFoundException::new)
+                .getChildren().stream().map(childMapper::toChildDTO).toList();
+    }
+
+    public ChildDTO getChild(Long id, Long parentId) throws NotFoundException {
+        Child child = childRepo.findByIdAndParentId(id, parentId).orElseThrow(NotFoundException::new);
+        return childMapper.toChildDTO(child);
+
 
     }
 
@@ -98,13 +113,14 @@ public class UserService implements UserDetailsService {
     }
 
      @Transactional
-    public void addChild(Long childId, Long parentId) throws NotFoundException {
-        User parent = userMapper.toUser(getUserById(parentId));
+    public void addChild(Long childId, Long parentId) throws NotFoundException, AlreadyExistsException {
+        User parent = userRepo.findById(parentId).orElseThrow(NotFoundException::new);
         Child child = childRepo.findById(childId).orElseThrow(NotFoundException::new);
 
         if(!parent.getChildren().contains(child)){
             parent.getChildren().add(child);
         }
+        else throw new AlreadyExistsException("this child already exists");
 
         userRepo.save(parent);
 
