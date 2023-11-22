@@ -5,6 +5,7 @@ import com.errahouti.BabyCareApi.controller.auth.RegisterRequest;
 import com.errahouti.BabyCareApi.dto.child.ChildMapper;
 import com.errahouti.BabyCareApi.dto.user.UserDTO;
 import com.errahouti.BabyCareApi.dto.user.UserMapper;
+import com.errahouti.BabyCareApi.exception.EmailAlreadyExistsException;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.User;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -28,6 +30,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
     private final ChildRepo childRepo;
+    private final ChildService childService;
 
     private final UserMapper userMapper;
     private final ChildMapper childMapper;
@@ -51,6 +54,26 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public void deleteUser(Long id) throws NotFoundException {
+        User user = userRepo.findById(id).orElseThrow(NotFoundException::new);
+        userRepo.delete(user);
+    }
+
+    public UserDTO updateUser(UserDTO updateRequest, Long id) throws NotFoundException {
+
+        User user = userRepo.findById(id).orElseThrow(NotFoundException::new);
+        if(!Objects.equals(user.getUsername(), updateRequest.getUsername())){
+            throw new NotFoundException("Email not found");
+        }
+
+        System.out.println(updateRequest.getUsername());
+        System.out.println(user);
+
+        userMapper.update(updateRequest, user);
+        user.setPassword(passwordEncoder.encoder().encode(updateRequest.getPassword()));
+       return userMapper.toUserDTO(userRepo.save(user));
+    }
+
 
     public UserDTO getUserById(Long id) throws NotFoundException {
         return userMapper.toUserDTO(userRepo.findById(id)
@@ -65,13 +88,38 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void addChildren(List<Long> childListIds, Long parentId) throws NotFoundException {
-        User user = userRepo.findById(parentId).orElseThrow(NotFoundException::new);
+        User user = userMapper.toUser(getUserById(parentId));
 
         for(Long id : childListIds){
             Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
             user.getChildren().add(child);
         }
         userRepo.save(user);
+    }
+
+     @Transactional
+    public void addChild(Long childId, Long parentId) throws NotFoundException {
+        User parent = userMapper.toUser(getUserById(parentId));
+        Child child = childRepo.findById(childId).orElseThrow(NotFoundException::new);
+
+        if(!parent.getChildren().contains(child)){
+            parent.getChildren().add(child);
+        }
+
+        userRepo.save(parent);
+
+
+    }
+
+    // TODO: add child
+
+    public void removeChild(Long id, Long parentId) throws NotFoundException {
+        User user = userMapper.toUser(getUserById(parentId));
+        if(!user.getChildren().isEmpty()){
+            user.getChildren().remove(childMapper.toChild(childService.getChildById(id)));
+        }
+        userRepo.save(user);
+
     }
 
 
