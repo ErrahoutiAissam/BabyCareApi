@@ -19,13 +19,27 @@ public class NutritionService {
     private final NutritionMapper nutritionMapper;
 
     public NutritionDTO createNutrition(NutritionDTO nutritionDTO){
-        return nutritionMapper.toNutritionDTO(nutritionRepo
-                .save(nutritionMapper.createNutrition(nutritionDTO)));
+        Nutrition nutrition = nutritionMapper.createNutrition(nutritionDTO);
+        nutrition.setReminderState(nutritionDTO.getReminderState());
+        nutrition.setReminderDate(nutritionDTO.getReminderDate());
+
+        return nutritionMapper.toNutritionDTO(nutritionRepo.save(nutrition));
     }
 
-//    public NutritionDTO updateNutrition(NutritionDTO updateRequest, Long id){
-//
-//    }
+    public NutritionDTO updateNutrition(NutritionDTO updateRequest, Long id){
+        Nutrition nutrition = nutritionRepo.findById(id).orElseThrow(NotFoundException::new);
+        nutritionMapper.updateNutritionFromDTO(updateRequest, nutrition);
+        nutrition.setReminderState(updateRequest.getReminderState());
+        nutrition.setReminderDate(updateRequest.getReminderDate());
+        nutrition.setId(id);
+
+        return nutritionMapper.toNutritionDTO(nutritionRepo.save(nutrition));
+    }
+
+    public void deleteNutrition(Long id){
+        Nutrition nutrition = nutritionRepo.findById(id).orElseThrow(NotFoundException::new);
+        nutritionRepo.delete(nutrition);
+    }
 
     public NutritionDTO getNutritionById(Long id) throws NotFoundException {
         return nutritionMapper.toNutritionDTO(nutritionRepo.findById(id)
