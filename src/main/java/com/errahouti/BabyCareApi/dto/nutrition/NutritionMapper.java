@@ -11,5 +11,7 @@ public interface NutritionMapper {
 
     Nutrition createNutrition(NutritionDTO nutritionDTO);
 
+    void updateNutritionFromDTO(NutritionDTO nutritionDTO, Nutrition nutrition);
+
 
 }

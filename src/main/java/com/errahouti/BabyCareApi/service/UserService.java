@@ -57,24 +57,24 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<ChildDTO> getChildren(Long id) throws NotFoundException {
+    public List<ChildDTO> getChildren(Long id){
         return userRepo.findById(id).orElseThrow(NotFoundException::new)
                 .getChildren().stream().map(childMapper::toChildDTO).toList();
     }
 
-    public ChildDTO getChild(Long id, Long parentId) throws NotFoundException {
+    public ChildDTO getChild(Long id, Long parentId){
         Child child = childRepo.findByIdAndParentId(id, parentId).orElseThrow(NotFoundException::new);
         return childMapper.toChildDTO(child);
 
 
     }
 
-    public void deleteUser(Long id) throws NotFoundException {
+    public void deleteUser(Long id){
         User user = userRepo.findById(id).orElseThrow(NotFoundException::new);
         userRepo.delete(user);
     }
 
-    public UserDTO updateUser(UserDTO updateRequest, Long id) throws NotFoundException {
+    public UserDTO updateUser(UserDTO updateRequest, Long id){
 
         User user = userRepo.findById(id).orElseThrow(NotFoundException::new);
         if(!Objects.equals(user.getUsername(), updateRequest.getUsername())){
@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDTO getUserById(Long id) throws NotFoundException {
+    public UserDTO getUserById(Long id){
         return userMapper.toUserDTO(userRepo.findById(id)
                 .orElseThrow(NotFoundException::new));
     }
@@ -100,7 +100,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void addChildren(List<Long> childListIds, Long parentId) throws NotFoundException {
+    public void addChildren(List<Long> childListIds, Long parentId){
         User user = userMapper.toUser(getUserById(parentId));
 
         for(Long id : childListIds){
@@ -127,7 +127,7 @@ public class UserService implements UserDetailsService {
 
     // TODO: add child
 
-    public void removeChild(Long id, Long parentId) throws NotFoundException {
+    public void removeChild(Long id, Long parentId){
         User user = userMapper.toUser(getUserById(parentId));
         if(!user.getChildren().isEmpty()){
             user.getChildren().remove(childMapper.toChild(childService.getChildById(id)));

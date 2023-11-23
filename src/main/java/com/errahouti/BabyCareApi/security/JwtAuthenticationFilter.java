@@ -1,6 +1,7 @@
 package com.errahouti.BabyCareApi.security;
 
 
+import com.errahouti.BabyCareApi.exception.TokenExpiredException;
 import com.errahouti.BabyCareApi.service.JwtService;
 import com.errahouti.BabyCareApi.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                }
+                } else throw new TokenExpiredException("this token has expired");
             }
         }
 

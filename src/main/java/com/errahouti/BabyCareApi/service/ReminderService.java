@@ -19,7 +19,7 @@ public class ReminderService {
     private final ReminderRepo reminderRepo;
     private final ReminderMapper reminderMapper;
 
-    public ReminderDTO createReminder(ReminderDTO reminderDTO) throws NotFoundException {
+    public ReminderDTO createReminder(ReminderDTO reminderDTO){
         Reminder reminder = reminderRepo.findById(reminderDTO.getId())
                 .orElseThrow(NotFoundException::new);
         return reminderMapper.toReminderDTO(reminderRepo.save(reminder));

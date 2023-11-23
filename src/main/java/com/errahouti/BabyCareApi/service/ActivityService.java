@@ -23,7 +23,7 @@ public class ActivityService {
                 .save(activityMapper.createActivity(activityDTO)));
     }
 
-    public ActivityDTO getActivityById(Long id) throws NotFoundException {
+    public ActivityDTO getActivityById(Long id){
         return activityMapper.toActivityDTO(activityRepo.findById(id)
                 .orElseThrow(NotFoundException::new));
     }

@@ -24,7 +24,7 @@ public class DiaperService {
                 .save(diaperMapper.createDiaper(diaperDTO)));
     }
 
-    public DiaperDTO getDiaperById(Long id) throws NotFoundException {
+    public DiaperDTO getDiaperById(Long id) {
         return diaperMapper.toDiaperDTO(diaperRepo.findById(id)
                 .orElseThrow(NotFoundException::new));
     }

@@ -17,7 +17,7 @@ public class SleepService {
     private final SleepMapper sleepMapper;
 
 
-    public SleepDTO getSleepById(Long id) throws NotFoundException {
+    public SleepDTO getSleepById(Long id)  {
         return sleepMapper.toSleepDTO(sleepRepo.findById(id)
                 .orElseThrow(NotFoundException::new));
     }

@@ -32,7 +32,7 @@ public class ChildService {
     private final DiaperMapper diaperMapper;
 
 
-    public ChildDTO getChildById(Long id) throws NotFoundException {
+    public ChildDTO getChildById(Long id){
         return childMapper.toChildDTO(childRepo.findById(id)
                 .orElseThrow(NotFoundException::new));
     }
@@ -47,7 +47,7 @@ public class ChildService {
                 .map(childMapper::toChildDTO).toList();
     }
 
-    public ChildDTO updateChild(ChildDTO updateRequest, Long id) throws NotFoundException {
+    public ChildDTO updateChild(ChildDTO updateRequest, Long id){
         Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
         childMapper.update(updateRequest, child);
         child.setId(id);
@@ -55,13 +55,13 @@ public class ChildService {
         return childMapper.toChildDTO(childRepo.save(child));
     }
 
-    public void deleteChild(Long id) throws NotFoundException {
+    public void deleteChild(Long id){
         Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
         childRepo.delete(child);
     }
 
     @Transactional
-    public void addNutritionReminder(NutritionDTO nutritionDTO, ChildDTO childDTO) throws NotFoundException {
+    public void addNutritionReminder(NutritionDTO nutritionDTO, ChildDTO childDTO){
 
         Child child = childRepo.findById(childDTO.getId())
                 .orElseThrow(NotFoundException::new);
@@ -69,7 +69,7 @@ public class ChildService {
         childRepo.save(child);
     }
     @Transactional
-    public void addSleepReminder(SleepDTO sleepDTO, ChildDTO childDTO) throws NotFoundException {
+    public void addSleepReminder(SleepDTO sleepDTO, ChildDTO childDTO) {
 
         Child child = childRepo.findById(childDTO.getId())
                 .orElseThrow(NotFoundException::new);
@@ -77,7 +77,7 @@ public class ChildService {
         childRepo.save(child);
     }
     @Transactional
-    public void addActivityReminder(ActivityDTO activityDTO, ChildDTO childDTO) throws NotFoundException {
+    public void addActivityReminder(ActivityDTO activityDTO, ChildDTO childDTO){
 
         Child child = childRepo.findById(childDTO.getId())
                 .orElseThrow(NotFoundException::new);
@@ -85,7 +85,7 @@ public class ChildService {
         childRepo.save(child);
     }
     @Transactional
-    public void addDiaperReminder(DiaperDTO diaperDTO, ChildDTO childDTO) throws NotFoundException {
+    public void addDiaperReminder(DiaperDTO diaperDTO, ChildDTO childDTO){
 
         Child child = childRepo.findById(childDTO.getId())
                 .orElseThrow(NotFoundException::new);

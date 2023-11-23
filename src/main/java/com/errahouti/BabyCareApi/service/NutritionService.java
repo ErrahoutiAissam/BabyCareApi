@@ -23,6 +23,10 @@ public class NutritionService {
                 .save(nutritionMapper.createNutrition(nutritionDTO)));
     }
 
+//    public NutritionDTO updateNutrition(NutritionDTO updateRequest, Long id){
+//
+//    }
+
     public NutritionDTO getNutritionById(Long id) throws NotFoundException {
         return nutritionMapper.toNutritionDTO(nutritionRepo.findById(id)
                 .orElseThrow(NotFoundException::new));

@@ -17,7 +17,7 @@ public class TipsService {
     private final TipsRepo tipsRepo;
     private final TipsMapper tipsMapper;
 
-    public TipsDTO getTipsById(Long id) throws NotFoundException {
+    public TipsDTO getTipsById(Long id){
         return tipsMapper.toTipsDTO(tipsRepo.findById(id)
                 .orElseThrow(NotFoundException::new));
     }
