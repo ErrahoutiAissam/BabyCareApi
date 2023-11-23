@@ -81,8 +81,6 @@ public class UserService implements UserDetailsService {
             throw new NotFoundException("Email not found");
         }
 
-        System.out.println(updateRequest.getUsername());
-        System.out.println(user);
 
         userMapper.update(updateRequest, user);
         user.setPassword(passwordEncoder.encoder().encode(updateRequest.getPassword()));

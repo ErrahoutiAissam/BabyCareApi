@@ -47,6 +47,19 @@ public class ChildService {
                 .map(childMapper::toChildDTO).toList();
     }
 
+    public ChildDTO updateChild(ChildDTO updateRequest, Long id) throws NotFoundException {
+        Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
+        childMapper.update(updateRequest, child);
+        child.setId(id);
+
+        return childMapper.toChildDTO(childRepo.save(child));
+    }
+
+    public void deleteChild(Long id) throws NotFoundException {
+        Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
+        childRepo.delete(child);
+    }
+
     @Transactional
     public void addNutritionReminder(NutritionDTO nutritionDTO, ChildDTO childDTO) throws NotFoundException {
 

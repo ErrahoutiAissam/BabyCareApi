@@ -1,6 +1,5 @@
 package com.errahouti.BabyCareApi.controller.parent;
 
-
 import com.errahouti.BabyCareApi.dto.user.UserDTO;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.service.UserService;
@@ -46,16 +45,16 @@ public class ParentController {
     }
 
 
-    @SneakyThrows
-    @PostMapping("/{id}/addChild/{childId}")
-    public ResponseEntity<?> addChildToParent(
-            @PathVariable("id") Long parentId,
-            @PathVariable("childId") Long childId
-    ){
-        userService.addChild(childId, parentId);
-        return ResponseEntity.ok("Child added Successfully");
-
-    }
+//    @SneakyThrows
+//    @PostMapping("/{id}/addChild/{childId}")
+//    public ResponseEntity<?> addChildToParent(
+//            @PathVariable("id") Long parentId,
+//            @PathVariable("childId") Long childId
+//    ){
+//        userService.addChild(childId, parentId);
+//        return ResponseEntity.ok("Child added Successfully");
+//
+//    }
 
     @SneakyThrows
     @GetMapping("/{id}/children")

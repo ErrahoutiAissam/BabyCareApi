@@ -4,6 +4,7 @@ package com.errahouti.BabyCareApi.dto.child;
 import com.errahouti.BabyCareApi.model.Child;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ChildMapper {
@@ -20,4 +21,7 @@ public interface ChildMapper {
     @Mapping(target = "activityReminders", ignore = true)
     @Mapping(target = "healthCareReminders", ignore = true)
     Child toChild(ChildDTO childDTO);
+
+    @Mapping(target = "id", ignore = true)
+    void update(ChildDTO childDTO, @MappingTarget Child child);
 }
