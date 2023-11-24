@@ -9,6 +9,7 @@ import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
+import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
@@ -69,7 +70,7 @@ public class ChildService {
         childRepo.save(child);
     }
     @Transactional
-    public void addSleepReminder(SleepDTO sleepDTO, ChildDTO childDTO) {
+    public void addSleepReminder(CreateSleepDTO sleepDTO, ChildDTO childDTO) {
 
         Child child = childRepo.findById(childDTO.getId())
                 .orElseThrow(NotFoundException::new);
