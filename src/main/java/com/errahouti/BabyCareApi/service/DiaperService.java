@@ -2,8 +2,8 @@ package com.errahouti.BabyCareApi.service;
 
 import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
-import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
-import com.errahouti.BabyCareApi.exception.NotFoundException;
+import com.errahouti.BabyCareApi.exception.DiaperNotFoundException;
+import com.errahouti.BabyCareApi.model.Diaper;
 import com.errahouti.BabyCareApi.repository.DiaperRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +25,33 @@ public class DiaperService {
     }
 
     public DiaperDTO getDiaperById(Long id) {
-        return diaperMapper.toDiaperDTO(diaperRepo.findById(id)
-                .orElseThrow(NotFoundException::new));
+        return diaperMapper.toDiaperDTO(findDiaperById(id));
     }
 
-    public List<DiaperDTO> getAllDiaper(){
+    public DiaperDTO update(DiaperDTO updateRequest, Long id) {
+        Diaper diaper = findDiaperById(id);
+        diaperMapper.updateDiaperFromDTO(updateRequest, diaper);
+        diaper.setReminderState(updateRequest.getReminderState());
+        diaper.setReminderDate(updateRequest.getReminderDate());
+        diaper.setId(id);
+
+        return diaperMapper.toDiaperDTO(diaperRepo.save(diaper));
+    }
+
+    public List<DiaperDTO> getAllDiaper() {
         return diaperRepo.findAll().stream()
                 .map(diaperMapper::toDiaperDTO).toList();
+    }
+
+
+    public void deleteDiaper(Long id) {
+        Diaper diaper = findDiaperById(id);
+        diaperRepo.delete(diaper);
+    }
+
+
+    private Diaper findDiaperById(Long id) {
+        return diaperRepo.findById(id)
+                .orElseThrow(() -> new DiaperNotFoundException(id));
     }
 }

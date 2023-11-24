@@ -1,15 +1,14 @@
 package com.errahouti.BabyCareApi.dto.sleep;
 
+import com.errahouti.BabyCareApi.dto.reminder.ReminderDTO;
 import lombok.*;
 
 import java.util.Date;
-@Setter
-@Getter
-@Builder
-@ToString
+
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
-public class CreateSleepDTO {
+@Data
+public class CreateSleepDTO extends ReminderDTO {
 
     private Date startDate;
     private Date endDate;
