@@ -41,6 +41,7 @@ public class SleepService {
     public void update(UpdateSleepDTO updateSleepDTO, Long id) throws SleepNotFoundException {
         Sleep sleepToModify = findSleepById(id);
         sleepMapper.updateSleep(updateSleepDTO, sleepToModify);
+        sleepToModify.setId(id);
         sleepRepo.save(sleepToModify);
     }
 
