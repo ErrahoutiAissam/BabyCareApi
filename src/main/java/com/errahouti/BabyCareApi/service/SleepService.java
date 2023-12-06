@@ -1,13 +1,10 @@
 package com.errahouti.BabyCareApi.service;
 
-import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.dto.sleep.UpdateSleepDTO;
-import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.exception.SleepNotFoundException;
-import com.errahouti.BabyCareApi.model.Nutrition;
 import com.errahouti.BabyCareApi.model.ReminderState;
 import com.errahouti.BabyCareApi.model.Sleep;
 import com.errahouti.BabyCareApi.repository.SleepRepo;
