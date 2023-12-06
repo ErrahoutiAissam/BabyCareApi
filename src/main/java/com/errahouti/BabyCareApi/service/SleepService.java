@@ -42,8 +42,6 @@ public class SleepService {
         sleepRepo.save(sleepToModify);
     }
 
-
-
     public void delete(Long sleepId) throws SleepNotFoundException{
         Sleep sleep = findSleepById(sleepId);
         sleepRepo.delete(sleep);

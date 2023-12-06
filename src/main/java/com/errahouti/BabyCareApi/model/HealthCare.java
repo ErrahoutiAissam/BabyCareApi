@@ -3,6 +3,7 @@ package com.errahouti.BabyCareApi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor

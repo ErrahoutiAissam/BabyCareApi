@@ -5,6 +5,7 @@ import com.errahouti.BabyCareApi.dto.reminder.ReminderMapper;
 import com.errahouti.BabyCareApi.model.Tips;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring",uses = {ReminderMapper.class})
 
@@ -15,4 +16,6 @@ public interface TipsMapper {
 
     @Mapping(target = "parentList", ignore = true)
     TipsDTO toTipsDTO(Tips tips);
+
+    void updateTipsFromDTO(TipsDTO tipsDTO, @MappingTarget Tips tips);
 }
