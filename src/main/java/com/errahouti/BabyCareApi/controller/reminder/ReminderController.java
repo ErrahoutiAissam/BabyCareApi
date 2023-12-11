@@ -1,7 +1,6 @@
 package com.errahouti.BabyCareApi.controller.reminder;
 
 
-import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.reminder.ReminderDTO;
 import com.errahouti.BabyCareApi.service.ReminderService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +40,19 @@ public class ReminderController {
     public ResponseEntity<?> deleteReminder(@PathVariable("id") Long id){
         reminderService.deleteReminder(id);
         return ResponseEntity.ok("Reminder deleted successfully");
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<?> getTodayReminders(){
+        return ResponseEntity.ok(reminderService.getTodayReminders());
+    }
+    @GetMapping("/today/completed")
+    public ResponseEntity<?> getTodayCompletedReminders(){
+        return ResponseEntity.ok(reminderService.getTodayRemindersCompleted());
+    }
+    @GetMapping("/today/upcoming")
+    public ResponseEntity<?> getTodayUpcomingReminders(){
+        return ResponseEntity.ok(reminderService.getTodayUpcomingReminders());
     }
 
 }

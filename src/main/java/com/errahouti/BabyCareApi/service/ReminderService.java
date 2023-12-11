@@ -2,15 +2,25 @@ package com.errahouti.BabyCareApi.service;
 
 
 
+import com.errahouti.BabyCareApi.dto.activity.ActivityMapper;
+import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
+import com.errahouti.BabyCareApi.dto.healthCare.HealthCareMapper;
+import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
 import com.errahouti.BabyCareApi.dto.reminder.ReminderDTO;
 import com.errahouti.BabyCareApi.dto.reminder.ReminderMapper;
+import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
-import com.errahouti.BabyCareApi.model.Reminder;
+import com.errahouti.BabyCareApi.model.*;
 import com.errahouti.BabyCareApi.repository.ReminderRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +28,14 @@ public class ReminderService {
 
     private final ReminderRepo reminderRepo;
     private final ReminderMapper reminderMapper;
+    private final SleepMapper sleepMapper;
+    private final NutritionMapper nutritionMapper;
+    private final DiaperMapper diaperMapper;
+    private final HealthCareMapper healthCareMapper;
+    private final ActivityMapper activityMapper;
 
-    public ReminderDTO createReminder(ReminderDTO reminderDTO){
+
+    public ReminderDTO createReminder(ReminderDTO reminderDTO) {
         Reminder reminder = reminderMapper.createReminder(reminderDTO);
         reminder.setReminderDate(reminderDTO.getReminderDate());
         return reminderMapper.toReminderDTO(reminderRepo.save(reminder));
@@ -31,7 +47,7 @@ public class ReminderService {
                 .findById(id).orElseThrow(NotFoundException::new));
     }
 
-    public ReminderDTO updateReminder(ReminderDTO updateRequest, long id){
+    public ReminderDTO updateReminder(ReminderDTO updateRequest, long id) {
         Reminder reminder = reminderRepo.findById(id).orElseThrow(NotFoundException::new);
         reminderMapper.updateReminderFromDTO(updateRequest, reminder);
         reminder.setId(id);
@@ -39,15 +55,61 @@ public class ReminderService {
         return reminderMapper.toReminderDTO(reminderRepo.save(reminder));
     }
 
-    public void deleteReminder(Long id){
+    public void deleteReminder(Long id) {
         Reminder reminder = reminderRepo.findById(id).orElseThrow(NotFoundException::new);
         reminderRepo.delete(reminder);
     }
 
-    public List<ReminderDTO> getAllReminders(){
+    public List<ReminderDTO> getAllReminders() {
         return reminderRepo.findAll().stream()
                 .map(reminderMapper::toReminderDTO).toList();
     }
 
+    public List<Reminder> getTodayRemindersList() {
+        LocalDate today = LocalDate.now();
+
+
+        return reminderRepo.findAll().stream()
+                .filter(reminder -> {
+                    LocalDate reminderDate = reminder.getReminderDate()
+                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    return reminderDate.isEqual(today);
+                })
+                .toList();
+    }
+
+    public List<ReminderDTO> getTodayReminders() {
+        List<Reminder> reminderListToday = getTodayRemindersList();
+        System.out.println(reminderListToday);
+
+        if(reminderListToday.isEmpty()){
+            return null;
+        }
+        return reminderListToday.stream()
+                .map(reminder -> switch (reminder.getClass().getSimpleName()) {
+                    case "Sleep" -> sleepMapper.toSleepDTO((Sleep) reminder);
+                        case "Diaper" -> diaperMapper.toDiaperDTO((Diaper) reminder);
+                        case "HealthCare" -> healthCareMapper.toHealthCareDTO((HealthCare) reminder);
+                        case "Nutrition" -> nutritionMapper.toNutritionDTO((Nutrition) reminder);
+                        case "Activity" -> activityMapper.toActivityDTO((Activity) reminder);
+                    // Handle other subclasses if needed
+                    default -> throw new RuntimeException("list is empty");
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<ReminderDTO> getTodayRemindersCompleted(){
+        return getTodayReminders().stream().filter(reminderDTO ->
+                reminderDTO.getReminderState().equals(ReminderState.COMPLETED)).toList();
+    }
+
+    public List<ReminderDTO> getTodayUpcomingReminders(){
+        return getTodayReminders().stream().filter(reminderDTO ->
+                reminderDTO.getReminderState().equals(ReminderState.UPCOMING)).toList();
+    }
+
 
 }
+
+
