@@ -60,14 +60,23 @@ public class ChildController {
         return ResponseEntity.ok(reminderService.getChildReminders(id));
     }
 
-    @GetMapping("{id}/nutritions")
+    @GetMapping("/{id}/nutritions")
     public ResponseEntity<?> getChildNutritions(@PathVariable("id") Long id){
         return  ResponseEntity.ok(nutritionService.getChildNutritions(id));
     }
-//    @GetMapping("{id}/sleepReminders")
-//    public ResponseEntity<?> getChildNutritions(@PathVariable("id") Long id){
-//        return  ResponseEntity.ok(nutritionService.getChildNutritions(id));
-//    }
+    @GetMapping("/{id}/sleep")
+    public ResponseEntity<?> getChildSleepReminder(@PathVariable("id") Long id){
+        return  ResponseEntity.ok(sleepService.getChildSleepReminder(id));
+    }
+    @GetMapping("/{id}/healthCare")
+    public ResponseEntity<?> getChildHealthCareReminder(@PathVariable("id") Long id){
+        return  ResponseEntity.ok(healthService.getChildHealthCare(id));
+    }
+
+    @GetMapping("/{id}/diaper")
+    public ResponseEntity<?> getChildDiapers(@PathVariable("id") Long id){
+        return ResponseEntity.ok(diaperService.getChildDiapers(id));
+    }
 
 
 
