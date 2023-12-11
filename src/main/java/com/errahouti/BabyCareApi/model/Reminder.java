@@ -25,5 +25,9 @@ public class Reminder {
     @Enumerated(EnumType.STRING)
     private ReminderState reminderState;
 
+    @ManyToOne
+    private Child child;
+
+
 
 }

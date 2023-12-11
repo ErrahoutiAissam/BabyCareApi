@@ -9,12 +9,15 @@ import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
+import com.errahouti.BabyCareApi.dto.reminder.ReminderDTO;
+import com.errahouti.BabyCareApi.dto.reminder.ReminderMapper;
 import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
+import com.errahouti.BabyCareApi.repository.ReminderRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,8 @@ public class ChildService {
 
     private final ChildRepo childRepo;
     private final ChildMapper childMapper;
+    private final ReminderRepo reminderRepo;
+    private final ReminderMapper reminderMapper;
     private final NutritionMapper nutritionMapper;
     private final SleepMapper sleepMapper;
     private final ActivityMapper activityMapper;
@@ -61,10 +66,13 @@ public class ChildService {
         childRepo.delete(child);
     }
 
-    @Transactional
-    public void addNutritionReminder(NutritionDTO nutritionDTO, ChildDTO childDTO){
 
-        Child child = childRepo.findById(childDTO.getId())
+    /*
+
+    @Transactional
+    public void addNutritionReminder(NutritionDTO nutritionDTO, Long id){
+
+        Child child = childRepo.findById(id)
                 .orElseThrow(NotFoundException::new);
         child.getNutritionReminders().add(nutritionMapper.createNutrition(nutritionDTO));
         childRepo.save(child);
@@ -93,6 +101,7 @@ public class ChildService {
         child.getDiaperReminders().add(diaperMapper.createDiaper(diaperDTO));
         childRepo.save(child);
     }
+     */
 
 
 

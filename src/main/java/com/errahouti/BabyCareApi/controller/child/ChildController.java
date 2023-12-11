@@ -3,6 +3,7 @@ package com.errahouti.BabyCareApi.controller.child;
 
 import com.errahouti.BabyCareApi.dto.child.ChildDTO;
 import com.errahouti.BabyCareApi.service.ChildService;
+import com.errahouti.BabyCareApi.service.ReminderService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class ChildController {
 
     private final ChildService childService;
+    private final ReminderService reminderService;
 
 
     @GetMapping
@@ -49,6 +51,12 @@ public class ChildController {
         childService.deleteChild(id);
         return ResponseEntity.ok("child Deleted Successfully");
     }
+
+    @GetMapping("/{id}/reminder")
+    public ResponseEntity<?> getChildReminders(@PathVariable("id") Long id){
+        return ResponseEntity.ok(reminderService.getChildReminders(id));
+    }
+
 
 
 }

@@ -86,14 +86,17 @@ public class ReminderService {
         if(reminderListToday.isEmpty()){
             return null;
         }
-        return reminderListToday.stream()
+        return reminderTypeSwitcher(reminderListToday);
+    }
+
+    public List<ReminderDTO> reminderTypeSwitcher(List<Reminder> list){
+        return list.stream()
                 .map(reminder -> switch (reminder.getClass().getSimpleName()) {
                     case "Sleep" -> sleepMapper.toSleepDTO((Sleep) reminder);
-                        case "Diaper" -> diaperMapper.toDiaperDTO((Diaper) reminder);
-                        case "HealthCare" -> healthCareMapper.toHealthCareDTO((HealthCare) reminder);
-                        case "Nutrition" -> nutritionMapper.toNutritionDTO((Nutrition) reminder);
-                        case "Activity" -> activityMapper.toActivityDTO((Activity) reminder);
-                    // Handle other subclasses if needed
+                    case "Diaper" -> diaperMapper.toDiaperDTO((Diaper) reminder);
+                    case "HealthCare" -> healthCareMapper.toHealthCareDTO((HealthCare) reminder);
+                    case "Nutrition" -> nutritionMapper.toNutritionDTO((Nutrition) reminder);
+                    case "Activity" -> activityMapper.toActivityDTO((Activity) reminder);
                     default -> throw new RuntimeException("list is empty");
                 })
                 .collect(Collectors.toList());
@@ -107,6 +110,10 @@ public class ReminderService {
     public List<ReminderDTO> getTodayUpcomingReminders(){
         return getTodayReminders().stream().filter(reminderDTO ->
                 reminderDTO.getReminderState().equals(ReminderState.UPCOMING)).toList();
+    }
+
+    public List<ReminderDTO> getChildReminders(Long childId){
+        return reminderTypeSwitcher(reminderRepo.findByChild_Id(childId));
     }
 
 

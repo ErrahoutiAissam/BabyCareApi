@@ -34,16 +34,6 @@ public class Child {
     @ManyToOne
     private User parent;
 
-    @OneToMany
-    private List<Nutrition> nutritionReminders;
-    @OneToMany
-    private List<Diaper> diaperReminders ;
-    @OneToMany
-    private List<Activity> activityReminders;
-    @OneToMany
-    private List<HealthCare> healthCareReminders;
-    @OneToMany
-    private List<Sleep> sleepReminders;
 
 
 }
