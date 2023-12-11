@@ -1,5 +1,6 @@
 package com.errahouti.BabyCareApi.service;
 
+import com.errahouti.BabyCareApi.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,7 +33,9 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id",((User)userDetails).getId());
+        return generateToken(map, userDetails);
     }
 
     public String generateToken(
