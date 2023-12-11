@@ -9,7 +9,9 @@ import com.errahouti.BabyCareApi.repository.TipsRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,16 @@ public class TipsService {
     public List<TipsDTO> getAllTips(){
         return tipsRepo.findAll().stream()
                 .map(tipsMapper::toTipsDTO).toList();
+    }
+
+
+    public TipsDTO getRandomTip(){
+        List<Tips> tipList = tipsRepo.findAll();
+
+        if(tipList.isEmpty()){
+            return null;
+        }
+        Random random = new Random();
+        return  tipsMapper.toTipsDTO(tipList.get(random.nextInt(tipList.size())));
     }
 }

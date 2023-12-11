@@ -45,4 +45,10 @@ public class TipsController {
         return ResponseEntity.ok("Tip deleted successfully");
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<?> getRandomTip(){
+        System.out.println(tipsService.getRandomTip());
+        return ResponseEntity.ok(tipsService.getRandomTip().getDescription());
+    }
+
 }
