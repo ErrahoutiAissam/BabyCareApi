@@ -3,7 +3,10 @@ package com.errahouti.BabyCareApi.service;
 import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
 import com.errahouti.BabyCareApi.exception.DiaperNotFoundException;
+import com.errahouti.BabyCareApi.exception.NotFoundException;
+import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.Diaper;
+import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.DiaperRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.util.List;
 public class DiaperService {
 
     private final DiaperRepo diaperRepo;
+    private final ChildRepo childRepo;
 
     private final DiaperMapper diaperMapper;
 
@@ -53,5 +57,11 @@ public class DiaperService {
     private Diaper findDiaperById(Long id) {
         return diaperRepo.findById(id)
                 .orElseThrow(() -> new DiaperNotFoundException(id));
+    }
+
+
+    public List<DiaperDTO> getChildDiapers(Long id){
+        return diaperRepo.findByChildId(id).stream()
+                .map(diaperMapper::toDiaperDTO).toList();
     }
 }

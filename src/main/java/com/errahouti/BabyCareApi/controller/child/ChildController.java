@@ -2,8 +2,7 @@ package com.errahouti.BabyCareApi.controller.child;
 
 
 import com.errahouti.BabyCareApi.dto.child.ChildDTO;
-import com.errahouti.BabyCareApi.service.ChildService;
-import com.errahouti.BabyCareApi.service.ReminderService;
+import com.errahouti.BabyCareApi.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,10 @@ public class ChildController {
 
     private final ChildService childService;
     private final ReminderService reminderService;
+    private final NutritionService nutritionService;
+    private final DiaperService diaperService;
+    private final SleepService sleepService;
+    private final HealthService healthService;
 
 
     @GetMapping
@@ -56,6 +59,17 @@ public class ChildController {
     public ResponseEntity<?> getChildReminders(@PathVariable("id") Long id){
         return ResponseEntity.ok(reminderService.getChildReminders(id));
     }
+
+    @GetMapping("{id}/nutritions")
+    public ResponseEntity<?> getChildNutritions(@PathVariable("id") Long id){
+        return  ResponseEntity.ok(nutritionService.getChildNutritions(id));
+    }
+//    @GetMapping("{id}/sleepReminders")
+//    public ResponseEntity<?> getChildNutritions(@PathVariable("id") Long id){
+//        return  ResponseEntity.ok(nutritionService.getChildNutritions(id));
+//    }
+
+
 
 
 

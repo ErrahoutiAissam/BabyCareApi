@@ -16,6 +16,7 @@ import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
+import com.errahouti.BabyCareApi.model.Nutrition;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.ReminderRepo;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class ChildService {
         Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
         childRepo.delete(child);
     }
+
 
 
     /*

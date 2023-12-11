@@ -1,5 +1,6 @@
 package com.errahouti.BabyCareApi.service;
 
+import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
@@ -50,6 +51,11 @@ public class SleepService {
     private Sleep findSleepById(Long sleepId) throws SleepNotFoundException {
         return sleepRepo.findById(sleepId)
                 .orElseThrow(() -> new SleepNotFoundException(sleepId));
+    }
+
+    public List<SleepDTO> getChildSleepReminder(Long id){
+        return sleepRepo.findByChildId(id).stream()
+                .map(sleepMapper::toSleepDTO).toList();
     }
 
 }

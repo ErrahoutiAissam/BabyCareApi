@@ -1,6 +1,7 @@
 package com.errahouti.BabyCareApi.service;
 
 
+import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
@@ -48,6 +49,10 @@ public class NutritionService {
 
     public List<NutritionDTO> getAllNutrition(){
         return nutritionRepo.findAll().stream()
+                .map(nutritionMapper::toNutritionDTO).toList();
+    }
+    public List<NutritionDTO> getChildNutritions(Long id){
+        return nutritionRepo.findByChildId(id).stream()
                 .map(nutritionMapper::toNutritionDTO).toList();
     }
 }
