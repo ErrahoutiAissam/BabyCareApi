@@ -19,7 +19,7 @@ public class AppConfig {
     private final PasswordEncoder passwordEncoder;
 
     @Configuration
-    public class JwtConfig {
+    public static class JwtConfig {
 
         @Value("${jwt.secret}")
         private String secretKey;

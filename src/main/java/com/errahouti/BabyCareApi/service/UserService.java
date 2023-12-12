@@ -45,6 +45,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException("username not found"));
     }
 
+
+    public List<ChildDTO> getChildren(Long id){
+        return userRepo.findById(id).orElseThrow(NotFoundException::new)
+                .getChildren().stream().map(childMapper::toChildDTO).toList();
+    }
     public UserDTO addUser(RegisterRequest request){
         User user = User.builder()
                 .firstName(request.getFirstName())
@@ -57,10 +62,6 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<ChildDTO> getChildren(Long id){
-        return userRepo.findById(id).orElseThrow(NotFoundException::new)
-                .getChildren().stream().map(childMapper::toChildDTO).toList();
-    }
 
     public ChildDTO getChild(Long id, Long parentId){
         Child child = childRepo.findByIdAndParentId(id, parentId).orElseThrow(NotFoundException::new);
