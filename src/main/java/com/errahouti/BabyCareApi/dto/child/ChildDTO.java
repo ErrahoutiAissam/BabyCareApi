@@ -1,6 +1,7 @@
 package com.errahouti.BabyCareApi.dto.child;
 
 
+import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.model.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class ChildDTO {
     private List<Diaper> diaperReminders ;
     private List<Activity> activityReminders;
     private List<HealthCare> healthCareReminders;
+    private List<SleepDTO> sleepReminders;
 
 
 }

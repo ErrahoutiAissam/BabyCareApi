@@ -14,4 +14,5 @@ public class ReminderDTO {
     private Long id;
     private Date reminderDate;
     private ReminderState reminderState;
+    private Long childId;
 }

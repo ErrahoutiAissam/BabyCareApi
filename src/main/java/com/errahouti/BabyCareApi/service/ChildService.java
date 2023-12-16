@@ -1,24 +1,13 @@
 package com.errahouti.BabyCareApi.service;
 
 
-import com.errahouti.BabyCareApi.dto.activity.ActivityDTO;
-import com.errahouti.BabyCareApi.dto.activity.ActivityMapper;
 import com.errahouti.BabyCareApi.dto.child.ChildDTO;
 import com.errahouti.BabyCareApi.dto.child.ChildMapper;
-import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
-import com.errahouti.BabyCareApi.dto.diaper.DiaperMapper;
-import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
-import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
-import com.errahouti.BabyCareApi.dto.reminder.ReminderDTO;
-import com.errahouti.BabyCareApi.dto.reminder.ReminderMapper;
 import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
-import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
-import com.errahouti.BabyCareApi.model.Nutrition;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
-import com.errahouti.BabyCareApi.repository.ReminderRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +20,7 @@ public class ChildService {
 
     private final ChildRepo childRepo;
     private final ChildMapper childMapper;
-    private final ReminderRepo reminderRepo;
-    private final ReminderMapper reminderMapper;
-    private final NutritionMapper nutritionMapper;
     private final SleepMapper sleepMapper;
-    private final ActivityMapper activityMapper;
-    private final DiaperMapper diaperMapper;
 
 
     public ChildDTO getChildById(Long id){
@@ -66,7 +50,14 @@ public class ChildService {
         Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
         childRepo.delete(child);
     }
+    @Transactional
+    public void addSleepReminder(CreateSleepDTO sleepDTO, ChildDTO childDTO) {
 
+        Child child = childRepo.findById(childDTO.getId())
+                .orElseThrow(NotFoundException::new);
+        child.getSleepReminders().add(sleepMapper.createSleep(sleepDTO));
+        childRepo.save(child);
+    }
 
 
     /*

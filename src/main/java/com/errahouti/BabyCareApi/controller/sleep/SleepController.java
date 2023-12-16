@@ -3,13 +3,11 @@ package com.errahouti.BabyCareApi.controller.sleep;
 import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.UpdateSleepDTO;
 import com.errahouti.BabyCareApi.exception.SleepNotFoundException;
-import com.errahouti.BabyCareApi.model.Sleep;
 import com.errahouti.BabyCareApi.service.SleepService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/sleep")

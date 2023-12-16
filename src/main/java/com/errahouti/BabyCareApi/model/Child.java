@@ -34,6 +34,9 @@ public class Child {
     @ManyToOne
     private User parent;
 
+    @OneToMany(mappedBy = "child")
+    private List<Sleep> sleepReminders;
+
 
 
 }
