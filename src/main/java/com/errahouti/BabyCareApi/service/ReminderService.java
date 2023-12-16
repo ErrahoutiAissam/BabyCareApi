@@ -9,6 +9,7 @@ import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
 import com.errahouti.BabyCareApi.dto.reminder.ReminderDTO;
 import com.errahouti.BabyCareApi.dto.reminder.ReminderMapper;
 import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
+import com.errahouti.BabyCareApi.dto.tips.TipsDTO;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.*;
 import com.errahouti.BabyCareApi.repository.ReminderRepo;
@@ -17,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,7 @@ public class ReminderService {
     private final DiaperMapper diaperMapper;
     private final HealthCareMapper healthCareMapper;
     private final ActivityMapper activityMapper;
+    private final TipsService tipsService;
 
 
     public ReminderDTO createReminder(ReminderDTO reminderDTO) {
@@ -115,6 +116,33 @@ public class ReminderService {
     public List<ReminderDTO> getChildReminders(Long childId){
         return reminderTypeSwitcher(reminderRepo.findByChild_Id(childId));
     }
+
+    public TodayInfo getTodayInfo(Long childId) {
+        List<ReminderDTO> todayReminders = getTodayChildReminders(childId);
+        int remindersCompleted = (int) todayReminders.stream()
+                .filter(reminderDTO -> reminderDTO.getReminderState().equals(ReminderState.COMPLETED))
+                .count();
+        int remindersNotCompleted = (int) todayReminders.stream()
+                .filter(reminderDTO -> !reminderDTO.getReminderState().equals(ReminderState.COMPLETED))
+                .count();
+
+        TipsDTO tips = tipsService.getRandomTip();
+
+        return new TodayInfo(todayReminders, remindersCompleted, remindersNotCompleted, tips);
+    }
+    public List<ReminderDTO> getTodayChildReminders(Long childId) {
+        List<Reminder> todayReminders = reminderRepo.findByChild_Id(childId).stream()
+                .filter(reminder -> {
+                    LocalDate reminderDate = reminder.getReminderDate().toInstant()
+                            .atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate today = LocalDate.now();
+                    return reminderDate.isEqual(today);
+                })
+                .collect(Collectors.toList());
+
+        return reminderTypeSwitcher(todayReminders);
+    }
+
 
 
 }
