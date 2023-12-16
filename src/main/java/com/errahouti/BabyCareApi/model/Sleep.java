@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor

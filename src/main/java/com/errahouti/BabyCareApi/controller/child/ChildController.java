@@ -2,11 +2,17 @@ package com.errahouti.BabyCareApi.controller.child;
 
 
 import com.errahouti.BabyCareApi.dto.child.ChildDTO;
+import com.errahouti.BabyCareApi.model.ChildProgress;
+import com.errahouti.BabyCareApi.repository.ChildProgressRepo;
 import com.errahouti.BabyCareApi.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ public class ChildController {
     private final DiaperService diaperService;
     private final SleepService sleepService;
     private final HealthService healthService;
+    private final ChildProgressRepo childProgressRepo;
 
 
     @GetMapping
@@ -78,7 +85,16 @@ public class ChildController {
         return ResponseEntity.ok(diaperService.getChildDiapers(id));
     }
 
+    @GetMapping("/{id}/progress/weight")
+    public ResponseEntity<Map<Integer, Double>> getChildWeightProgress(@PathVariable Long id) {
+        List<ChildProgress> progressList = childProgressRepo.findByChild_Id(id);
 
+        Map<Integer, Double> weightProgressMap = progressList.stream()
+                .flatMap(progress -> progress.getGrowthData().entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Double::sum));
+
+        return ResponseEntity.ok(weightProgressMap);
+    }
 
 
 
