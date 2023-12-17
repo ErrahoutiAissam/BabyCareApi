@@ -12,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Child {
@@ -34,9 +33,15 @@ public class Child {
     @ManyToOne
     private User parent;
 
-    @OneToMany(mappedBy = "child")
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<Sleep> sleepReminders;
-
-
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private List<Activity> activityReminders;
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private List<Diaper> diaperReminders;
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private List<HealthCare> healthCareReminders;
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private List<Nutrition> NutritionReminders;
 
 }
