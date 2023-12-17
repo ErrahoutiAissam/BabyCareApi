@@ -34,50 +34,55 @@ public class ChildService {
                 .orElseThrow(NotFoundException::new));
     }
 
-    public ChildDTO createChild(ChildDTO childDTO){
-        return childMapper.toChildDTO(childRepo
-                .save(childMapper.toChild(childDTO)));
-    }
-
     public List<ChildDTO> getAllChildren(){
         return childRepo.findAll().stream()
                 .map(childMapper::toChildDTO).toList();
     }
+    public ChildDTO createChild(ChildDTO childDTO){
+        Child child = childMapper.toChild(childDTO);
+        Child savedChild = childRepo.save(child);
 
+        ChildProgress childProgress = getChildProgressOrCreate(savedChild.getId(), LocalDate.now().getYear());
+        childProgressRepo.save(childProgress);
+
+        return childMapper.toChildDTO(savedChild);
+    }
 
     public ChildDTO updateChild(ChildDTO updateRequest, Long id){
         Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
         childMapper.update(updateRequest, child);
         child.setId(id);
 
+        Child savedChild = childRepo.save(child);
+
         double newWeight = updateRequest.getWeight();
-        child.setWeight(newWeight);
-        childRepo.save(child);
         int currentYear = LocalDate.now().getYear();
         ChildProgress childProgress = getChildProgressOrCreate(id, currentYear);
+
         Map<Integer, Double> growthData = childProgress.getGrowthData();
         growthData.put(currentYear, newWeight);
         childProgress.setGrowthData(growthData);
         childProgressRepo.save(childProgress);
-        return childMapper.toChildDTO(child);
+
+        return childMapper.toChildDTO(savedChild);
     }
 
     private ChildProgress getChildProgressOrCreate(Long id, int year) {
-        Child child = childMapper.toChild(getChildById(id));
         List<ChildProgress> childProgressList = childProgressRepo.findByChild_Id(id);
-        // Filter the list to find an entry for the specified year
         Optional<ChildProgress> optionalChildProgress = childProgressList.stream()
                 .filter(progress -> progress.getGrowthData().containsKey(year))
                 .findFirst();
 
         return optionalChildProgress.orElseGet(() -> {
-            // If no entry found for the year, create a new ChildProgress entry
             ChildProgress newChildProgress = new ChildProgress();
-            newChildProgress.setChild(child);
-            newChildProgress.setGrowthData(Map.of(year, child.getWeight()));
+            newChildProgress.setChild(childMapper.toChild(getChildById(id)));
+            newChildProgress.setGrowthData(Map.of(year, getChildById(id).getWeight()));
             return newChildProgress;
         });
     }
+
+
+
 
     public void deleteChild(Long id){
         Child child = childRepo.findById(id).orElseThrow(NotFoundException::new);
