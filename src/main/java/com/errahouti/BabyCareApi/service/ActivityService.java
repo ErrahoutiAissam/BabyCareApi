@@ -4,8 +4,12 @@ package com.errahouti.BabyCareApi.service;
 import com.errahouti.BabyCareApi.dto.activity.ActivityDTO;
 import com.errahouti.BabyCareApi.dto.activity.ActivityMapper;
 import com.errahouti.BabyCareApi.exception.ActivityNotFoundException;
+import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Activity;
+import com.errahouti.BabyCareApi.model.Child;
+import com.errahouti.BabyCareApi.model.Diaper;
 import com.errahouti.BabyCareApi.repository.ActivityRepo;
+import com.errahouti.BabyCareApi.repository.ChildRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +21,22 @@ public class ActivityService {
 
     private final ActivityRepo activityRepo;
     private final ActivityMapper activityMapper;
+    private final ChildRepo childRepo;
 
     public ActivityDTO createActivity(ActivityDTO activityDTO){
-        return activityMapper.toActivityDTO(activityRepo
-                .save(activityMapper.createActivity(activityDTO)));
+        Child child = childRepo.findById(activityDTO.getChildId()).orElseThrow(NotFoundException::new);
+        Activity activity = activityMapper.createActivity(activityDTO);
+        activity.setChild(child);
+        activity.setReminderState(activityDTO.getReminderState());
+        activity.setReminderDate(activityDTO.getReminderDate());
+
+        Activity createdActivity = activityRepo.save(activity);
+
+        child.getActivityReminders().add(createdActivity);
+        childRepo.save(child);
+
+        return activityMapper.toActivityDTO(createdActivity);
+
     }
 
     public ActivityDTO getActivityById(Long id){
