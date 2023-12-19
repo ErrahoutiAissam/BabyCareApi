@@ -29,14 +29,6 @@ public class HealthService {
                 .orElseThrow(NotFoundException::new));
     }
 
-//    public HealthCareDTO createHealthCareReminder(HealthCareDTO createRequest){
-//        HealthCare healthCare = healthCareMapper.createHealthCare(createRequest);
-//        healthCare.setReminderDate(createRequest.getReminderDate());
-//        healthCare.setReminderState(createRequest.getReminderState());
-//        healthCare.setReminderState(ReminderState.UPCOMING);
-//        return healthCareMapper.toHealthCareDTO(healthCareRepo.save(healthCare));
-//    }
-
     public HealthCareDTO create(HealthCareDTO healthCareDTO) {
         Child child = childRepo.findById(healthCareDTO.getChildId()).orElseThrow(NotFoundException::new);
 
