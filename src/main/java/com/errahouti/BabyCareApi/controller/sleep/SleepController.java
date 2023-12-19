@@ -21,7 +21,7 @@ public class SleepController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateSleepDTO createRequest){
-        return ResponseEntity.ok(sleepService.create(createRequest));
+        return ResponseEntity.ok(sleepService.createSleep(createRequest));
     }
 
     @PutMapping("/{id}")
