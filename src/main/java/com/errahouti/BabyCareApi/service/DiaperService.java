@@ -6,12 +6,12 @@ import com.errahouti.BabyCareApi.exception.DiaperNotFoundException;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.Diaper;
-import com.errahouti.BabyCareApi.model.Nutrition;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.DiaperRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,11 +30,11 @@ public class DiaperService {
         Child child = childRepo.findById(diaperDTO.getChildId()).orElseThrow(NotFoundException::new);
         Diaper diaper = diaperMapper.createDiaper(diaperDTO);
         diaper.setChild(child);
-        diaper.setReminderState(diaperDTO.getReminderState());
-        diaper.setReminderDate(diaperDTO.getReminderDate());
-
+        Date currentDate = new Date();
+        Date startDate = diaperDTO.getReminderDate();
+        diaper.setReminderState(reminderService.determineReminderState(currentDate, startDate));
+        diaper.setReminderDate(startDate);
         Diaper createdDiaper = diaperRepo.save(diaper);
-
         child.getDiaperReminders().add(createdDiaper);
         childRepo.save(child);
 
@@ -48,7 +48,7 @@ public class DiaperService {
     public DiaperDTO update(DiaperDTO updateRequest, Long id) {
         Diaper diaper = findDiaperById(id);
         diaperMapper.updateDiaperFromDTO(updateRequest, diaper);
-        diaper.setReminderState(updateRequest.getReminderState());
+        diaper.setReminderState(reminderService.determineReminderState(new Date(),updateRequest.getReminderDate()));
         diaper.setReminderDate(updateRequest.getReminderDate());
         diaper.setId(id);
 
