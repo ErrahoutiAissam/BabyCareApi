@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,6 +142,18 @@ public class ReminderService {
                 .collect(Collectors.toList());
 
         return reminderTypeSwitcher(todayReminders);
+    }
+
+    ReminderState determineReminderState(Date currentDate, Date startDate) {
+        int comparisonResult = currentDate.compareTo(startDate);
+
+        if (comparisonResult < 0) {
+            return ReminderState.UPCOMING;
+        } else if (comparisonResult == 0) {
+            return ReminderState.ONGOING;
+        } else {
+            return ReminderState.COMPLETED;
+        }
     }
 
 

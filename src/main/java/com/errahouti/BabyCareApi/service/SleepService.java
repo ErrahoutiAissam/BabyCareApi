@@ -25,6 +25,8 @@ public class SleepService {
     private final ChildService childService;
     private final SleepMapper sleepMapper;
     private final ChildMapper childMapper;
+    private final ReminderService reminderService;
+
 
     public List<SleepDTO> getAll(){
         return sleepRepo.findAll().stream()
@@ -39,7 +41,7 @@ public class SleepService {
         sleep.setChild(child);
         Date currentDate = new Date();
         Date startDate = sleepDTO.getStartDate();
-        sleep.setReminderState(determineReminderState(currentDate, startDate));
+        sleep.setReminderState(reminderService.determineReminderState(currentDate, startDate));
         sleep.setReminderDate(sleepDTO.getStartDate());
         sleep.setSleepType(SleepType.determineSleepType(sleepDTO.getAwakenings()));
         Sleep createdSleep = sleepRepo.save(sleep);
@@ -49,19 +51,6 @@ public class SleepService {
 
         System.out.println(createdSleep);
         return sleepMapper.toSleepDTO(createdSleep);
-    }
-
-
-    private ReminderState determineReminderState(Date currentDate, Date startDate) {
-        int comparisonResult = currentDate.compareTo(startDate);
-
-        if (comparisonResult < 0) {
-            return ReminderState.UPCOMING;
-        } else if (comparisonResult == 0) {
-            return ReminderState.ONGOING;
-        } else {
-            return ReminderState.COMPLETED;
-        }
     }
 
     public SleepDTO getById(Long id) throws SleepNotFoundException {

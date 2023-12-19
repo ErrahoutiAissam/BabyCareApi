@@ -15,6 +15,7 @@ public class ChildDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    private Long parentId;
     private int age;
     private Date birthDate;
     private Gender gender;

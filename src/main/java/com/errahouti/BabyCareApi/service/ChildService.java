@@ -8,8 +8,10 @@ import com.errahouti.BabyCareApi.dto.sleep.SleepMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.ChildProgress;
+import com.errahouti.BabyCareApi.model.User;
 import com.errahouti.BabyCareApi.repository.ChildProgressRepo;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
+import com.errahouti.BabyCareApi.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class ChildService {
     private final ChildProgressRepo childProgressRepo;
     private final ChildMapper childMapper;
     private final SleepMapper sleepMapper;
+    private final UserRepo userRepo;
 
 
     public ChildDTO getChildById(Long id){
@@ -40,6 +43,11 @@ public class ChildService {
     }
     public ChildDTO createChild(ChildDTO childDTO){
         Child child = childMapper.toChild(childDTO);
+        User parent = userRepo.findById(childDTO.getParentId()).orElseThrow(NotFoundException::new);
+        parent.getChildren().add(child);
+
+        child.setParent(parent);
+        userRepo.save(parent);
         Child savedChild = childRepo.save(child);
 
         ChildProgress childProgress = getChildProgressOrCreate(savedChild.getId(), LocalDate.now().getYear());
