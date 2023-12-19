@@ -6,6 +6,7 @@ import com.errahouti.BabyCareApi.exception.DiaperNotFoundException;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.Diaper;
+import com.errahouti.BabyCareApi.model.Nutrition;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.DiaperRepo;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,18 @@ public class DiaperService {
 
 
     public DiaperDTO createDiaper(DiaperDTO diaperDTO){
-        return diaperMapper.toDiaperDTO(diaperRepo
-                .save(diaperMapper.createDiaper(diaperDTO)));
+        Child child = childRepo.findById(diaperDTO.getChildId()).orElseThrow(NotFoundException::new);
+        Diaper diaper = diaperMapper.createDiaper(diaperDTO);
+        diaper.setChild(child);
+        diaper.setReminderState(diaperDTO.getReminderState());
+        diaper.setReminderDate(diaperDTO.getReminderDate());
+
+        Diaper createdDiaper = diaperRepo.save(diaper);
+
+        child.getDiaperReminders().add(createdDiaper);
+        childRepo.save(child);
+
+        return diaperMapper.toDiaperDTO(createdDiaper);
     }
 
     public DiaperDTO getDiaperById(Long id) {
