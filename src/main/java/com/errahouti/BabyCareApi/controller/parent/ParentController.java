@@ -1,5 +1,6 @@
 package com.errahouti.BabyCareApi.controller.parent;
 
+import com.errahouti.BabyCareApi.dto.child.ChildDTO;
 import com.errahouti.BabyCareApi.dto.user.UserDTO;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.service.UserService;
@@ -71,6 +72,12 @@ public class ParentController {
         return ResponseEntity.ok(userService.getChild(id, childId));
     }
 
+
+    @PostMapping("/{id}/children")
+    public ResponseEntity<?> addChild(@RequestBody ChildDTO childDTO, @PathVariable("id") Long id) {
+        userService.addChild(childDTO, id);
+        return ResponseEntity.ok().build();
+    }
 
 
 

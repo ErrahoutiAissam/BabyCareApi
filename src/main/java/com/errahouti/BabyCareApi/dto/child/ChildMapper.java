@@ -17,10 +17,7 @@ public interface ChildMapper {
     @Mapping(target = "sleepReminders", ignore = true)
     ChildDTO toChildDTO(Child child);
 
-    @Mapping(target = "nutritionReminders", ignore = true)
-    @Mapping(target = "diaperReminders", ignore = true)
-    @Mapping(target = "activityReminders", ignore = true)
-    @Mapping(target = "healthCareReminders", ignore = true)
+
     @Mapping(target = "sleepReminders", ignore = true)
     Child toChild(ChildDTO childDTO);
 

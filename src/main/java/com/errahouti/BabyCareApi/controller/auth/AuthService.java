@@ -26,13 +26,13 @@ public class AuthService {
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .username(request.getEmail())
+                .email(request.getEmail())
                 .password(passwordEncoder.encoder().encode(request.getPassword()))
                 .build();
 
 
 
-        if(userRepo.findByUsername(request.getEmail()).isPresent()){
+        if(userRepo.findByEmail(request.getEmail()).isPresent()){
             throw new NotFoundException("this email already exists");
         }
         userRepo.save(user);

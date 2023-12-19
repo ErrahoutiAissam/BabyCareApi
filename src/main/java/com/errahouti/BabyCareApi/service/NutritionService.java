@@ -5,7 +5,9 @@ import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
+import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.Nutrition;
+import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.NutritionRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,26 @@ public class NutritionService {
 
     private final NutritionRepo nutritionRepo;
     private final NutritionMapper nutritionMapper;
+    private final ChildRepo childRepo;
 
-    public NutritionDTO createNutrition(NutritionDTO nutritionDTO){
+    public NutritionDTO createNutrition(NutritionDTO nutritionDTO) {
+        Child child = childRepo.findById(nutritionDTO.getChildId()).orElseThrow(NotFoundException::new);
+
         Nutrition nutrition = nutritionMapper.createNutrition(nutritionDTO);
+
+        nutrition.setChild(child);
         nutrition.setReminderState(nutritionDTO.getReminderState());
         nutrition.setReminderDate(nutritionDTO.getReminderDate());
 
-        return nutritionMapper.toNutritionDTO(nutritionRepo.save(nutrition));
+        Nutrition createdNutrition = nutritionRepo.save(nutrition);
+
+        child.getNutritionReminders().add(createdNutrition);
+        childRepo.save(child);
+
+        System.out.println(createdNutrition);
+        return nutritionMapper.toNutritionDTO(createdNutrition);
     }
+
 
     public NutritionDTO updateNutrition(NutritionDTO updateRequest, Long id){
         Nutrition nutrition = nutritionRepo.findById(id).orElseThrow(NotFoundException::new);

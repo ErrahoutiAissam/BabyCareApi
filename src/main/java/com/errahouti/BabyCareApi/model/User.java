@@ -31,12 +31,15 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    private String phone;
+    @Column(nullable = false)
+    private String gender;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
+
     @OneToMany(mappedBy = "parent")
     private List<Child> children;
+
     @Column(nullable = false)
     private String password;
 
@@ -61,7 +64,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

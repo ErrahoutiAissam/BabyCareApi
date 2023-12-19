@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username)
+        return userRepo.findByEmail(username)
                 .orElseThrow(()-> new UsernameNotFoundException("username not found"));
     }
 
@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .username(request.getEmail())
+                .email(request.getEmail())
                 .password(passwordEncoder.encoder().encode(request.getPassword()))
                 .build();
 
@@ -124,6 +124,16 @@ public class UserService implements UserDetailsService {
         userRepo.save(parent);
 
 
+    }
+
+    @Transactional
+    public void addChild(ChildDTO child, Long parentId) throws NotFoundException, AlreadyExistsException {
+        User parent =  userRepo.findById(parentId).orElseThrow(NotFoundException::new);
+        Long childId = childService.createChild(child).getId();
+        Child child1 = childRepo.findById(childId).orElseThrow(NotFoundException::new);
+        parent.getChildren().add(child1);
+        child1.setParent(parent);
+        userRepo.save(parent);
     }
 
     // TODO: add child

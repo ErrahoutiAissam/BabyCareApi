@@ -4,12 +4,14 @@ package com.errahouti.BabyCareApi.controller.nutrition;
 import com.errahouti.BabyCareApi.dto.nutrition.NutritionDTO;
 import com.errahouti.BabyCareApi.service.NutritionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/nutrition")
+@Slf4j
 public class NutritionController {
 
     private final NutritionService nutritionService;

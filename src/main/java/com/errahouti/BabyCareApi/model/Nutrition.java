@@ -9,9 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Nutrition extends Reminder {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
     @Enumerated(EnumType.STRING)
     private NutritionType nutritionType;
     private String label;
@@ -20,4 +18,16 @@ public class Nutrition extends Reminder {
     private Long quantity;
 
 
+    @Override
+    public String toString() {
+        return "Nutrition{" +
+                "id=" + getId() +
+                ", nutritionType=" + nutritionType +
+                ", label='" + label + '\'' +
+                ", quantity=" + quantity +
+                ", reminderDate" + getReminderDate() +
+                ", reminderState" + getReminderState() +
+                ", childId:" + getChild().getId()+
+                '}';
+    }
 }

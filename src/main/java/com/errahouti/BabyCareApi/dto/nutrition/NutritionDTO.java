@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class NutritionDTO extends ReminderDTO {
-    private Long id;
     private NutritionType nutritionType;
     private String label;
     private Long quantity;
