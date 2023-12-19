@@ -1,6 +1,7 @@
 package com.errahouti.BabyCareApi.controller.note;
 
 
+import com.errahouti.BabyCareApi.dto.note.CreateNoteRequest;
 import com.errahouti.BabyCareApi.dto.note.NoteDTO;
 import com.errahouti.BabyCareApi.service.NoteService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class NoteController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> createNote(@RequestBody NoteDTO createRequest){
+    public ResponseEntity<?> createNote(@RequestBody CreateNoteRequest createRequest){
         return ResponseEntity.ok(NoteService.createNote(createRequest));
     }
 

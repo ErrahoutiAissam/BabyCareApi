@@ -1,5 +1,6 @@
 package com.errahouti.BabyCareApi.service;
 
+import com.errahouti.BabyCareApi.dto.note.CreateNoteRequest;
 import com.errahouti.BabyCareApi.dto.note.NoteDTO;
 import com.errahouti.BabyCareApi.dto.note.NoteMapper;
 import com.errahouti.BabyCareApi.exception.NoteNotFoundException;
@@ -8,6 +9,7 @@ import com.errahouti.BabyCareApi.repository.NoteRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -16,29 +18,31 @@ public class NoteService {
 
     private final NoteRepo NoteRepo;
 
-    private final NoteMapper NoteMapper;
+    private final NoteMapper noteMapper;
 
 
-    public NoteDTO createNote(NoteDTO NoteDTO){
-        return NoteMapper.toNoteDTO(NoteRepo
-                .save(NoteMapper.createNote(NoteDTO)));
+    public NoteDTO createNote(CreateNoteRequest noteDTO){
+        Note note= noteMapper.createNote(noteDTO);
+        note.setDate(new Date());
+        return noteMapper.toNoteDTO(NoteRepo
+                .save(note));
     }
 
     public NoteDTO getNoteById(Long id) {
-        return NoteMapper.toNoteDTO(findNoteById(id));
+        return noteMapper.toNoteDTO(findNoteById(id));
     }
 
     public NoteDTO update(NoteDTO updateRequest, Long id) {
         Note Note = findNoteById(id);
-        NoteMapper.updateNoteFromDTO(updateRequest, Note);
+        noteMapper.updateNoteFromDTO(updateRequest, Note);
         Note.setId(id);
 
-        return NoteMapper.toNoteDTO(NoteRepo.save(Note));
+        return noteMapper.toNoteDTO(NoteRepo.save(Note));
     }
 
     public List<NoteDTO> getAllNote() {
         return NoteRepo.findAll().stream()
-                .map(NoteMapper::toNoteDTO).toList();
+                .map(noteMapper::toNoteDTO).toList();
     }
 
 

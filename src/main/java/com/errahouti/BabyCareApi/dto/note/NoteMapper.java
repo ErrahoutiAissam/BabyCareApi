@@ -9,7 +9,7 @@ import org.mapstruct.MappingTarget;
 
 public interface NoteMapper {
 
-    Note createNote(NoteDTO NoteDTO);
+    Note createNote(CreateNoteRequest NoteDTO);
     NoteDTO toNoteDTO(Note Note);
 
     void updateNoteFromDTO(NoteDTO NoteDTO, @MappingTarget Note Note);
