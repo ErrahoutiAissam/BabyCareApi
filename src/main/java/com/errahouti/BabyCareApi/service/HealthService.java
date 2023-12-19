@@ -6,7 +6,6 @@ import com.errahouti.BabyCareApi.dto.healthCare.HealthCareMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
 import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.HealthCare;
-import com.errahouti.BabyCareApi.model.ReminderState;
 import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.HealthCareRepo;
 import lombok.RequiredArgsConstructor;
@@ -50,12 +49,12 @@ public class HealthService {
         System.out.println(createdHealthCare);
         return healthCareMapper.toHealthCareDTO(createdHealthCare);
     }
-
-
-
     public HealthCareDTO updateHealthCare(HealthCareDTO updateRequest, Long id){
         HealthCare healthCare = healthCareRepo.findById(id).orElseThrow(NotFoundException::new);
         healthCareMapper.updateHealthCareFromDTO(updateRequest, healthCare);
+        Date startDate = updateRequest.getStartDate();
+        healthCare.setReminderDate(startDate);
+        healthCare.setReminderState(reminderService.determineReminderState(new Date(), startDate));
         healthCare.setId(id);
         return healthCareMapper.toHealthCareDTO(healthCareRepo.save(healthCare));
     }
