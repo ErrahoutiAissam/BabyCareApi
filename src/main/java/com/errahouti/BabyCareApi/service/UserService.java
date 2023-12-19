@@ -78,7 +78,7 @@ public class UserService implements UserDetailsService {
     public UserDTO updateUser(UserDTO updateRequest, Long id){
 
         User user = userRepo.findById(id).orElseThrow(NotFoundException::new);
-        if(!Objects.equals(user.getUsername(), updateRequest.getUsername())){
+        if(!Objects.equals(user.getUsername(), updateRequest.getEmail())){
             throw new NotFoundException("Email not found");
         }
 

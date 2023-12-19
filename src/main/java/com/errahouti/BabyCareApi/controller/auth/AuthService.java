@@ -27,6 +27,7 @@ public class AuthService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .gender(request.getGender())
                 .password(passwordEncoder.encoder().encode(request.getPassword()))
                 .build();
 
@@ -46,6 +47,7 @@ public class AuthService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException {
 
         UserDetails userDetails = userService.loadUserByUsername(request.getEmail());
+        System.out.println(userDetails);
 
         if (passwordEncoder.encoder().matches(request.getPassword(),userDetails.getPassword())) {
             String token = jwtService.generateToken(userDetails);

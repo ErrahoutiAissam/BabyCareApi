@@ -14,8 +14,8 @@ import java.util.Set;
 public class UserDTO {
     private String firstName;
     private String lastName;
-    private String username;
-    private String phone;
+    private String email;
+    private String gender;
     private String password;
     private List<ChildDTO> children;
     private Set<Tips> tipsList;
