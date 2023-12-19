@@ -27,7 +27,7 @@ public class NoteController {
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<?> updateTip(
+    public ResponseEntity<?> updateNote(
             @RequestBody NoteDTO updateRequest,
             @PathVariable("id") Long id)
     {
@@ -35,12 +35,12 @@ public class NoteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTip(@PathVariable("id") Long id){
+    public ResponseEntity<?> getNote(@PathVariable("id") Long id){
         return ResponseEntity.ok(NoteService.getNoteById(id));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteTip(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteNote(@PathVariable("id") Long id){
         NoteService.deleteNote(id);
         return ResponseEntity.ok("Note deleted successfully");
     }
