@@ -35,6 +35,7 @@ public class NoteService {
     public NoteDTO update(NoteDTO updateRequest, Long id) {
         Note Note = findNoteById(id);
         noteMapper.updateNoteFromDTO(updateRequest, Note);
+        Note.setDate(new Date());
         Note.setId(id);
 
         return noteMapper.toNoteDTO(NoteRepo.save(Note));
