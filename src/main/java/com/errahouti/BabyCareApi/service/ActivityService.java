@@ -22,6 +22,8 @@ public class ActivityService {
     private final ActivityRepo activityRepo;
     private final ActivityMapper activityMapper;
     private final ChildRepo childRepo;
+    private final ReminderService reminderService;
+
 
     public ActivityDTO createActivity(ActivityDTO activityDTO){
         Child child = childRepo.findById(activityDTO.getChildId()).orElseThrow(NotFoundException::new);

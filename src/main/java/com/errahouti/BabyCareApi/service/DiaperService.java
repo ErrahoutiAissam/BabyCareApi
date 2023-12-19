@@ -20,6 +20,8 @@ public class DiaperService {
 
     private final DiaperRepo diaperRepo;
     private final ChildRepo childRepo;
+    private final ReminderService reminderService;
+
 
     private final DiaperMapper diaperMapper;
 

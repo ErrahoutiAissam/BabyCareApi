@@ -21,6 +21,7 @@ public class HealthService {
 
     private final HealthCareRepo healthCareRepo;
     private final ChildRepo childRepo;
+    private final ReminderService reminderService;
     private final HealthCareMapper healthCareMapper;
 
 
@@ -37,7 +38,7 @@ public class HealthService {
         healthCare.setChild(child);
         Date currentDate = new Date();
         Date startDate = healthCareDTO.getStartDate();
-        healthCare.setReminderState(determineReminderState(currentDate, startDate));
+        healthCare.setReminderState(reminderService.determineReminderState(currentDate, startDate));
         healthCare.setReminderDate(startDate);
         healthCare.setHealthCareType(healthCareDTO.getHealthCareType());
         healthCare.setNotes(healthCareDTO.getNotes());
@@ -51,17 +52,7 @@ public class HealthService {
     }
 
 
-    private ReminderState determineReminderState(Date currentDate, Date startDate) {
-        int comparisonResult = currentDate.compareTo(startDate);
 
-        if (comparisonResult < 0) {
-            return ReminderState.UPCOMING;
-        } else if (comparisonResult == 0) {
-            return ReminderState.ONGOING;
-        } else {
-            return ReminderState.COMPLETED;
-        }
-    }
     public HealthCareDTO updateHealthCare(HealthCareDTO updateRequest, Long id){
         HealthCare healthCare = healthCareRepo.findById(id).orElseThrow(NotFoundException::new);
         healthCareMapper.updateHealthCareFromDTO(updateRequest, healthCare);
