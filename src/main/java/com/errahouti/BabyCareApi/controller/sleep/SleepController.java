@@ -1,6 +1,7 @@
 package com.errahouti.BabyCareApi.controller.sleep;
 
 import com.errahouti.BabyCareApi.dto.sleep.CreateSleepDTO;
+import com.errahouti.BabyCareApi.dto.sleep.SleepDTO;
 import com.errahouti.BabyCareApi.dto.sleep.UpdateSleepDTO;
 import com.errahouti.BabyCareApi.exception.SleepNotFoundException;
 import com.errahouti.BabyCareApi.service.SleepService;
@@ -25,12 +26,11 @@ public class SleepController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<SleepDTO> update(
             @RequestBody UpdateSleepDTO updateSleepDTO,
             @PathVariable Long id
     ) throws SleepNotFoundException {
-        sleepService.update(updateSleepDTO, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(sleepService.update(updateSleepDTO, id));
     }
 
     @DeleteMapping("/{id}")

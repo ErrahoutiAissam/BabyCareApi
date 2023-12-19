@@ -52,16 +52,18 @@ public class SleepService {
         System.out.println(createdSleep);
         return sleepMapper.toSleepDTO(createdSleep);
     }
-
-    public SleepDTO getById(Long id) throws SleepNotFoundException {
-        return sleepMapper.toSleepDTO(findSleepById(id));
-    }
-
-    public void update(UpdateSleepDTO updateSleepDTO, Long id) throws SleepNotFoundException {
+    public SleepDTO update(UpdateSleepDTO updateSleepDTO, Long id) throws SleepNotFoundException {
         Sleep sleepToModify = findSleepById(id);
         sleepMapper.updateSleep(updateSleepDTO, sleepToModify);
+        sleepToModify.setReminderState(reminderService.determineReminderState(new Date(), updateSleepDTO.getStartDate()));
+        sleepToModify.setReminderDate(updateSleepDTO.getStartDate());
+        sleepToModify.setSleepType(SleepType.determineSleepType(updateSleepDTO.getAwakenings()));
         sleepToModify.setId(id);
-        sleepRepo.save(sleepToModify);
+
+        return sleepMapper.toSleepDTO(sleepRepo.save(sleepToModify));
+    }
+    public SleepDTO getById(Long id) throws SleepNotFoundException {
+        return sleepMapper.toSleepDTO(findSleepById(id));
     }
 
     public void delete(Long sleepId) throws SleepNotFoundException{
