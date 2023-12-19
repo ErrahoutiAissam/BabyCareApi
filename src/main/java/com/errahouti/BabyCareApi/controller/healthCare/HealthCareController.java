@@ -23,7 +23,7 @@ public class HealthCareController {
 
     @PostMapping("/add")
     public ResponseEntity<?> createHealth(@RequestBody HealthCareDTO createRequest){
-        return ResponseEntity.ok(healthService.createHealthCareReminder(createRequest));
+        return ResponseEntity.ok(healthService.create(createRequest));
     }
 
     @PutMapping("/{id}/update")

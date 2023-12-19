@@ -1,17 +1,18 @@
 package com.errahouti.BabyCareApi.service;
 
 
-import com.errahouti.BabyCareApi.dto.diaper.DiaperDTO;
 import com.errahouti.BabyCareApi.dto.healthCare.HealthCareDTO;
 import com.errahouti.BabyCareApi.dto.healthCare.HealthCareMapper;
 import com.errahouti.BabyCareApi.exception.NotFoundException;
+import com.errahouti.BabyCareApi.model.Child;
 import com.errahouti.BabyCareApi.model.HealthCare;
 import com.errahouti.BabyCareApi.model.ReminderState;
+import com.errahouti.BabyCareApi.repository.ChildRepo;
 import com.errahouti.BabyCareApi.repository.HealthCareRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ import java.util.List;
 public class HealthService {
 
     private final HealthCareRepo healthCareRepo;
+    private final ChildRepo childRepo;
     private final HealthCareMapper healthCareMapper;
 
 
@@ -27,14 +29,47 @@ public class HealthService {
                 .orElseThrow(NotFoundException::new));
     }
 
-    public HealthCareDTO createHealthCareReminder(HealthCareDTO createRequest){
-        HealthCare healthCare = healthCareMapper.createHealthCare(createRequest);
-        healthCare.setReminderDate(createRequest.getReminderDate());
-        healthCare.setReminderState(createRequest.getReminderState());
-        healthCare.setReminderState(ReminderState.UPCOMING);
-        return healthCareMapper.toHealthCareDTO(healthCareRepo.save(healthCare));
+//    public HealthCareDTO createHealthCareReminder(HealthCareDTO createRequest){
+//        HealthCare healthCare = healthCareMapper.createHealthCare(createRequest);
+//        healthCare.setReminderDate(createRequest.getReminderDate());
+//        healthCare.setReminderState(createRequest.getReminderState());
+//        healthCare.setReminderState(ReminderState.UPCOMING);
+//        return healthCareMapper.toHealthCareDTO(healthCareRepo.save(healthCare));
+//    }
+
+    public HealthCareDTO create(HealthCareDTO healthCareDTO) {
+        Child child = childRepo.findById(healthCareDTO.getChildId()).orElseThrow(NotFoundException::new);
+
+        HealthCare healthCare = healthCareMapper.createHealthCare(healthCareDTO);
+
+        healthCare.setChild(child);
+        Date currentDate = new Date();
+        Date startDate = healthCareDTO.getStartDate();
+        healthCare.setReminderState(determineReminderState(currentDate, startDate));
+        healthCare.setReminderDate(startDate);
+        healthCare.setHealthCareType(healthCareDTO.getHealthCareType());
+        healthCare.setNotes(healthCareDTO.getNotes());
+        HealthCare createdHealthCare = healthCareRepo.save(healthCare);
+
+        child.getHealthCareReminders().add(createdHealthCare);
+        childRepo.save(child);
+
+        System.out.println(createdHealthCare);
+        return healthCareMapper.toHealthCareDTO(createdHealthCare);
     }
 
+
+    private ReminderState determineReminderState(Date currentDate, Date startDate) {
+        int comparisonResult = currentDate.compareTo(startDate);
+
+        if (comparisonResult < 0) {
+            return ReminderState.UPCOMING;
+        } else if (comparisonResult == 0) {
+            return ReminderState.ONGOING;
+        } else {
+            return ReminderState.COMPLETED;
+        }
+    }
     public HealthCareDTO updateHealthCare(HealthCareDTO updateRequest, Long id){
         HealthCare healthCare = healthCareRepo.findById(id).orElseThrow(NotFoundException::new);
         healthCareMapper.updateHealthCareFromDTO(updateRequest, healthCare);

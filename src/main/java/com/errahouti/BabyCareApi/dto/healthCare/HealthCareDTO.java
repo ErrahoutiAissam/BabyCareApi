@@ -6,13 +6,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
 public class HealthCareDTO extends ReminderDTO {
     private Long id;
-
+    private Date startDate;
+    private Date endDate;
     private HealthCareType healthCareType;
-
     private String notes;
 }
